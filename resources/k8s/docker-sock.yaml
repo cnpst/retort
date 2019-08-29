@@ -1,0 +1,10 @@
+containers:
+- name: docker
+  image: docker
+  ttyEnabled: true
+  command: cat
+volumes:
+- host:/var/run/docker.sock: /var/run/docker.sock
+#- hostPathVolume:
+#    hostPath: '/var/run/docker.sock'
+#    mountPath: '/var/run/docker.sock'
