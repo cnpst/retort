@@ -1,0 +1,6 @@
+containers:
+- name: docker
+  image: docker:17-dind
+  ttyEnabled: true
+  command: dockerd-entrypoint.sh
+  privileged: true
