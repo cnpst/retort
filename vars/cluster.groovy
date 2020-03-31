@@ -27,12 +27,17 @@ def call(clusters, cl) {
 //    sh "echo ${kubeconfigYaml} > /var/run/secrets/${clusters}"
         writeFile file: "/home/jenkins/workspace/${target.cluster}", text: kubeconfigYaml
     }
-        
+    def closures = [:]
     for (def target : config.target) {
-        withEnv(["KUBECONFIG=/home/jenkins/workspace/${target.cluster}"]) {
-            cl(target)
-        }
+        def curr = target
+        closures.putAt(curr.cluster, {
+            withEnv(["KUBECONFIG=/home/jenkins/workspace/${curr.cluster}"]) {
+                logger.debug "Kubeconfig Filepath : KUBECONFIG=/home/jenkins/workspace/${curr.cluster}"
+                cl(curr)
+            }
+        })
     }
+    parallel closures
 }
 
 private def parseParam(param, logger) {
