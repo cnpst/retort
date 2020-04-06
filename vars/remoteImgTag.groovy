@@ -77,6 +77,8 @@ private def getManifestPath(token, config, logger) {
         quiet: false,
         validResponseCodes: '100:599'
     }catch(Exception e) {
+
+        logger.info "Enter Error"        
         logger.error "e.getmessage : " +  e.getMessage()
         logger.error "e.toString : " + e.toString()
         logger.error "e.getClass().getSimpleName() : " + e.getClass().getSimpleName()     
