@@ -44,6 +44,7 @@ private def getToken(config, logger) {
 
 private def getManifestPath(token, config, logger) {
     def MANIFEST_TYPE = '/v2/kshong/${config.imageName}/manifests/'
+    def con_type = "application/vnd.docker.distribution.manifest.v2+json"
     StringBuffer getManifestUrl = new StringBuffer("https://mcm-dev-devops.cloudzcp.io")
     getManifestUrl.append(MANIFEST_TYPE)
 
@@ -56,7 +57,7 @@ private def getManifestPath(token, config, logger) {
 
     def responseBody = httpRequest httpMode: 'GET',
     contentType: 'APPLICATION_JSON',
-    customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Accept', value: MANIFEST_TYPE]],
+    customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Accept', value: con_type]],
     url: getManifestUrl,
     quiet: true
     echo responseBody.content
@@ -66,6 +67,7 @@ private def getManifestPath(token, config, logger) {
 
 private void pushImgNew(token, metaData, config, logger) {
     def MANIFEST_TYPE = '/v2/kshong/${config.imageName}/manifests/'
+    def con_type = "application/vnd.docker.distribution.manifest.v2+json"
     StringBuffer getManifestUrl = new StringBuffer("https://mcm-dev-devops.cloudzcp.io")
     getManifestUrl.append(MANIFEST_TYPE)
 
@@ -78,9 +80,9 @@ private void pushImgNew(token, metaData, config, logger) {
     def responseBody = httpRequest httpMode: 'PUT',
     //contentType: con_type,
     customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Content-Type', value: con_type]],
-    url: REGISTRY_NAME + getManiFestUrl +  tag_new,
+    url: REGISTRY_NAME + getManiFestUrl ,
     requestBody: metaData,
     quiet: false,
-    validResponseCodes: '100:599'
+    validResponseCodes: '100:599',
     echo responseBody.content
 }
