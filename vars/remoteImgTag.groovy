@@ -50,8 +50,8 @@ private def getToken(config, logger) {
 }
 
 private def getManifestPath(token, config, logger) {
-    logger.info "starting get manifestInfo in image registry with ${config.registry}, ${config.imageName}, ${config.imageOldVersion}"
-    def MANIFEST_TYPE = "/v2/kshong/" + config.imageName + "/manifests/"
+    logger.info "starting get manifestInfo in image registry with registry : ${config.registry}, imageName : ${config.imageName}, imageOldVersion : ${config.imageOldVersion}"
+    def MANIFEST_TYPE = "/v2/" + config.imageName + "/manifests/"
     def con_type = "application/vnd.docker.distribution.manifest.v2+json"
     StringBuffer getManifestUrl = new StringBuffer("https://")
     
@@ -79,8 +79,8 @@ private def getManifestPath(token, config, logger) {
 }
 
 private void pushImgNew(token, metaData, config, logger) {
-    logger.info "starting get manifestInfo in image registry with ${config.registry}, ${config.imageName}, ${config.imageNewVersion}"
-    def MANIFEST_TYPE = '/v2/kshong/${config.imageName}/manifests/'
+    logger.info "starting get manifestInfo in image registry with registry : ${config.registry}, imageName : ${config.imageName}, imageNewVersion : ${config.imageNewVersion}"
+    def MANIFEST_TYPE = "/v2/" + config.imageName + "/manifests/"
     def con_type = "application/vnd.docker.distribution.manifest.v2+json"
     StringBuffer getManifestUrl = new StringBuffer("https://")
     
