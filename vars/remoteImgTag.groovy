@@ -7,14 +7,36 @@ def push(ret) {
     logger.info "stared remote image change tag and push"
 
     def config = getParam(ret)
-        
-    def token = getToken(config, logger)
-    if(token) {
-        def metaData = getManifestPath(token, config, logger)
-        if(metaData){
-            pushImgNew(token, metaData, config, logger)
+
+    if(retParamErrorCheck(config)) {
+        def token = getToken(config, logger)
+        if(token) {
+            def metaData = getManifestPath(token, config, logger)
+            if(metaData){
+                pushImgNew(token, metaData, config, logger)
+            }
         }
     }
+}
+
+private def retParamErrorCheck(config, logger) {
+    logger.info "starting request param error check"
+
+    if (!config.imageName) {
+        logger.error("imageName is required.")
+        throw new RetortException('RC203')
+    }
+
+    if (!config.imageOldVersion) {
+        logger.error("imageOldVersion is required.")
+        throw new RetortException('RC105')
+    }
+
+    if (!config.imageNewVersion) {
+        logger.error("imageNewVersion is required.")
+        throw new RetortException('RC106')
+    }
+    return true
 }
 
 // dockerCmd.push registry: HARBOR_REGISTRY, imageName: DOCKER_IMAGE, imageOldVersion: OLD_VERSION, imageNewVersion: NEW_VERSION, credentialsId: "HARBOR_CREDENTIALS"
@@ -140,6 +162,4 @@ private void pushImgNew(token, metaData, config, logger) {
     }
     
     logger.debug "Successfully pushed the remote image to the image registry : ${responseBody.content}"
-    
-        
 }
