@@ -21,7 +21,11 @@ def push(ret) {
 
 private def retParamErrorCheck(config, logger) {
     logger.info "starting request param error check"
+   
 
+    
+    logger.debug "config.imageName :  ${config.imageName}"
+    
     if (!config.imageName) {
         logger.error("imageName is required.")
         throw new RetortException('RC203')
