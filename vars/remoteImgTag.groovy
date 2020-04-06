@@ -19,6 +19,8 @@ def push(ret) {
 // dockerCmd.push registry: HARBOR_REGISTRY, imageName: DOCKER_IMAGE, imageOldVersion: OLD_VERSION, imageNewVersion: NEW_VERSION, credentialsId: "HARBOR_CREDENTIALS"
 
 private def getToken(config, logger) {
+    logger.info "starting get token Logging in image registry with ${config.credentialsId}"
+
     def LOGIN_PATH = '/service/token?service=harbor-registry&scope=repository:'
     StringBuffer tokenUrl = new StringBuffer("https://")
 
@@ -40,11 +42,16 @@ private def getToken(config, logger) {
 
     def jsonMap = readJSON text: responseBody.content
     def token = jsonMap.token
+    
+    logger.debug "Token : ${token}"
+    
+    
     return token
 }
 
 private def getManifestPath(token, config, logger) {
-    def MANIFEST_TYPE = '/v2/kshong/${config.imageName}/manifests/'
+    logger.info "starting get manifestInfo in image registry with ${config.registry}, ${config.imageName}, ${config.imageOldVersion}"
+    def MANIFEST_TYPE = "/v2/kshong/" + config.imageName + "/manifests/"
     def con_type = "application/vnd.docker.distribution.manifest.v2+json"
     StringBuffer getManifestUrl = new StringBuffer("https://")
     
@@ -65,16 +72,22 @@ private def getManifestPath(token, config, logger) {
     contentType: 'APPLICATION_JSON',
     customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Accept', value: con_type]],
     url: getManifestUrl.toString(),
-    quiet: true
+    quiet: false
     echo responseBody.content
 
     return responseBody.content
 }
 
 private void pushImgNew(token, metaData, config, logger) {
+    logger.info "starting get manifestInfo in image registry with ${config.registry}, ${config.imageName}, ${config.imageNewVersion}"
     def MANIFEST_TYPE = '/v2/kshong/${config.imageName}/manifests/'
     def con_type = "application/vnd.docker.distribution.manifest.v2+json"
-    StringBuffer getManifestUrl = new StringBuffer("https://mcm-dev-devops.cloudzcp.io")
+    StringBuffer getManifestUrl = new StringBuffer("https://")
+    
+    if(config.registry) {
+        getManifestUrl.append("${config.registry}")
+    }
+    
     getManifestUrl.append(MANIFEST_TYPE)
 
     if(config.imageNewVersion) {
