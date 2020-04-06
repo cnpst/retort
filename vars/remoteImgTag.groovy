@@ -104,6 +104,6 @@ private void pushImgNew(token, metaData, config, logger) {
     url: getManifestUrl.toString(),
     requestBody: metaData,
     quiet: false,
-    validResponseCodes: '100:599',
+    validResponseCodes: '100:599'
     echo responseBody.content
 }
