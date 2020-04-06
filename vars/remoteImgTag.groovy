@@ -68,9 +68,9 @@ private def getManifestPath(token, config, logger) {
     }
 
     echo getManifestUrl.toString()
-
+    def responseBody
     try {
-        def responseBody = httpRequest httpMode: 'GET',
+        responseBody = httpRequest httpMode: 'GET',
         contentType: 'APPLICATION_JSON',
         customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Accept', value: con_type]],
         url: getManifestUrl.toString(),
