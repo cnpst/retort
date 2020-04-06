@@ -77,11 +77,18 @@ private def getManifestPath(token, config, logger) {
         quiet: false,
         validResponseCodes: '100:599'
     }catch(Exception e) {
-        throw createException('RC206', e)
+        throw createException('RC207', e)
     }
 
-    echo responseBody.content
-
+    if(200 != responseBody.status) {
+        def jsonMap = readJSON text: responseBody.content
+        if (jsonMap.errors) {
+            logger.error "Failed to get manifest in Image Registry. [Error status code : ${responseBody.status} message : ${jsonMap.errors.message}] "
+            throw createException('RC208')
+        }
+    }
+    
+    logger.debug "success to get manifest in Image Registry : ${responseBody.content}"
     return responseBody.content
 }
 
