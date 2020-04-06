@@ -67,16 +67,24 @@ private def getManifestPath(token, config, logger) {
         getManifestUrl.append("${config.imageOldVersion}")
     }
 
-    echo getManifestUrl.toString()
+        echo getManifestUrl.toString()
 
+    try {
+        def responseBody = httpRequest httpMode: 'GET',
+        contentType: 'APPLICATION_JSON',
+        customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Accept', value: con_type]],
+        url: getManifestUrl.toString(),
+        quiet: false,
+        validResponseCodes: '100:599'
+    }catch(Exception e) {
+        e.getMessage()
+        logger.error "e.getmessage : " +  e.getMessage()
+        logger.error "e.toString : " + e.toString()
+        logger.error "e.getClass().getSimpleName() : " + e.getClass().getSimpleName()     
+        //        logger.error "Can not parse. Not supported type", param
+        //        throw new RetortException('RC603', param.toString())
+    }
 
-    def responseBody = httpRequest httpMode: 'GET',
-    contentType: 'APPLICATION_JSON',
-    customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Accept', value: con_type]],
-    url: getManifestUrl.toString(),
-    quiet: false,
-    validResponseCodes: '100:599'
-    
     echo responseBody.content
 
     return responseBody.content
