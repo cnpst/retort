@@ -35,7 +35,7 @@ private def getToken(config, logger) {
 
     def responseBody = httpRequest httpMode: 'GET',
     authentication: 'HARBOR_CREDENTIALS',
-    url: tokenUrl,
+    url: tokenUrl.toString(),
     quiet: true
 
     def jsonMap = readJSON text: responseBody.content
@@ -64,7 +64,7 @@ private def getManifestPath(token, config, logger) {
     def responseBody = httpRequest httpMode: 'GET',
     contentType: 'APPLICATION_JSON',
     customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Accept', value: con_type]],
-    url: getManifestUrl,
+    url: getManifestUrl.toString(),
     quiet: true
     echo responseBody.content
 
@@ -86,7 +86,7 @@ private void pushImgNew(token, metaData, config, logger) {
     def responseBody = httpRequest httpMode: 'PUT',
     //contentType: con_type,
     customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Content-Type', value: con_type]],
-    url: REGISTRY_NAME + getManiFestUrl ,
+    url: getManifestUrl.toString(),
     requestBody: metaData,
     quiet: false,
     validResponseCodes: '100:599',
