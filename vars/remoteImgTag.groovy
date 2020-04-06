@@ -94,6 +94,8 @@ private void pushImgNew(token, metaData, config, logger) {
         getManifestUrl.append("${config.imageNewVersion}")
     }
 
+    echo "token-->" + token
+    echo "metaData-->" + metaData
     echo getManifestUrl.toString()
 
     def responseBody = httpRequest httpMode: 'PUT',
