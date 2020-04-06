@@ -2,7 +2,7 @@ import retort.utils.logging.Logger
 import retort.exception.RetortException
 import static retort.utils.Utils.delegateParameters as getParam
 
-def remoteImgpush(ret) {
+def push(ret) {
     Logger logger = Logger.getLogger(this)
 
     def config = getParam(ret)
