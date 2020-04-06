@@ -60,14 +60,14 @@ private def getManifestPath(token, config, logger) {
     if(config.registry) {
         getManifestUrl.append("${config.registry}")
     }
-    
+
     getManifestUrl.append(MANIFEST_TYPE)
 
     if(config.imageOldVersion) {
         getManifestUrl.append("${config.imageOldVersion}")
     }
 
-        echo getManifestUrl.toString()
+    echo getManifestUrl.toString()
 
     try {
         def responseBody = httpRequest httpMode: 'GET',
@@ -77,13 +77,7 @@ private def getManifestPath(token, config, logger) {
         quiet: false,
         validResponseCodes: '100:599'
     }catch(Exception e) {
-
-        logger.info "Enter Error"        
-        logger.error "e.getmessage : " +  e.getMessage()
-        logger.error "e.toString : " + e.toString()
-        logger.error "e.getClass().getSimpleName() : " + e.getClass().getSimpleName()     
-        //        logger.error "Can not parse. Not supported type", param
-        //        throw new RetortException('RC603', param.toString())
+        throw createException('RC206', e)
     }
 
     echo responseBody.content
