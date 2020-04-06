@@ -7,9 +7,7 @@ def push(ret) {
     logger.info "stared remote image change tag and push"
 
     def config = getParam(ret)
-    
-    errorcheck(config)
-    
+        
     def token = getToken(config, logger)
     if(token) {
         def metaData = getManifestPath(token, config, logger)
