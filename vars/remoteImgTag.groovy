@@ -8,7 +8,7 @@ def push(ret) {
 
     def config = getParam(ret)
 
-    if(retParamErrorCheck(config)) {
+    if(retParamErrorCheck(config, logger)) {
         def token = getToken(config, logger)
         if(token) {
             def metaData = getManifestPath(token, config, logger)
