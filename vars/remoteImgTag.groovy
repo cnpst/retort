@@ -35,19 +35,29 @@ private def getToken(config, logger) {
     }
 
     echo tokenUrl.toString()
-
-    def responseBody = httpRequest httpMode: 'GET',
-    authentication: 'HARBOR_CREDENTIALS',
-    url: tokenUrl.toString(),
-    quiet: false,
-    validResponseCodes: '100:599'
+    
+    def responseBody
+    try {
+        responseBody = httpRequest httpMode: 'GET',
+        authentication: 'HARBOR_CREDENTIALS',
+        url: tokenUrl.toString(),
+        quiet: false,
+        validResponseCodes: '100:599'
+    }catch{
+        throw createException('RC205', e)
+    }
 
     def jsonMap = readJSON text: responseBody.content
     def token = jsonMap.token
-    
+
+    if(200 != responseBody.status) {
+        if (jsonMap.errors) {
+            logger.error "failed to get token in Image Registry. [Error status code : [${responseBody.status}], message : ${jsonMap.errors.message}] "
+            throw createException('RC206')
+        }
+    }
+        
     logger.debug "Token : ${token}"
-    
-    
     return token
 }
 
