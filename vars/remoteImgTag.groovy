@@ -108,16 +108,28 @@ private void pushImgNew(token, metaData, config, logger) {
         getManifestUrl.append("${config.imageNewVersion}")
     }
 
-    echo "token-->" + token
-    echo "metaData-->" + metaData
-    echo getManifestUrl.toString()
+    def responseBody
+    try {
+        responseBody = httpRequest httpMode: 'PUT',
+        customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Content-Type', value: con_type]],
+        url: getManifestUrl.toString(),
+        requestBody: metaData,
+        quiet: false,
+        validResponseCodes: '100:599'
+        echo responseBody.content
+    }catch(Exception e) {
+        throw createException('RC209', e)
+    }
     
-    def responseBody = httpRequest httpMode: 'PUT',
-    //contentType: con_type,
-    customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Content-Type', value: con_type]],
-    url: getManifestUrl.toString(),
-    requestBody: metaData,
-    quiet: false,
-    validResponseCodes: '100:599'
-    echo responseBody.content
+    if(201 != responseBody.status) {
+        def jsonMap = readJSON text: responseBody.content
+        if (jsonMap.errors) {
+            logger.error "failed to push the remote image to the Image Registry. [Error status code : [${responseBody.status}], message : ${jsonMap.errors.message}] "
+            throw createException('RC210')
+        }
+    }
+    
+    logger.debug "Successfully pushed the remote image to the image registry : ${responseBody.content}"
+    
+        
 }
