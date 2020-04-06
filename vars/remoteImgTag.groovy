@@ -7,6 +7,9 @@ def push(ret) {
     logger.info "stared remote image change tag and push"
 
     def config = getParam(ret)
+    
+    errorcheck(config)
+    
     def token = getToken(config, logger)
     if(token) {
         def metaData = getManifestPath(token, config, logger)
@@ -21,12 +24,12 @@ def push(ret) {
 private def getToken(config, logger) {
     logger.info "starting get token Logging in image registry with ${config.credentialsId}"
 
-    def LOGIN_PATH = '/service/token?service=harbor-registry&scope=repository:'
+    def TOKEN_PATH = '/service/token?service=harbor-registry&scope=repository:'
     StringBuffer tokenUrl = new StringBuffer("https://")
 
     if(config.registry) {
         tokenUrl.append("${config.registry}")
-        tokenUrl.append(LOGIN_PATH)
+        tokenUrl.append(TOKEN_PATH)
     }
 
     if(config.imageName) {
@@ -38,7 +41,8 @@ private def getToken(config, logger) {
     def responseBody = httpRequest httpMode: 'GET',
     authentication: 'HARBOR_CREDENTIALS',
     url: tokenUrl.toString(),
-    quiet: true
+    quiet: false,
+    validResponseCodes: '100:599'
 
     def jsonMap = readJSON text: responseBody.content
     def token = jsonMap.token
@@ -72,7 +76,9 @@ private def getManifestPath(token, config, logger) {
     contentType: 'APPLICATION_JSON',
     customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Accept', value: con_type]],
     url: getManifestUrl.toString(),
-    quiet: false
+    quiet: false,
+    validResponseCodes: '100:599'
+    
     echo responseBody.content
 
     return responseBody.content
@@ -97,7 +103,7 @@ private void pushImgNew(token, metaData, config, logger) {
     echo "token-->" + token
     echo "metaData-->" + metaData
     echo getManifestUrl.toString()
-
+    
     def responseBody = httpRequest httpMode: 'PUT',
     //contentType: con_type,
     customHeaders: [[name: 'Authorization', value: "Bearer " + token],[name: 'Content-Type', value: con_type]],
