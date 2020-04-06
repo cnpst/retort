@@ -4,6 +4,7 @@ import static retort.utils.Utils.delegateParameters as getParam
 
 def push(ret) {
     Logger logger = Logger.getLogger(this)
+    logger.info "stared remote image change tag and push"
 
     def config = getParam(ret)
     def token = getToken(config, logger)
@@ -19,10 +20,10 @@ def push(ret) {
 
 private def getToken(config, logger) {
     def LOGIN_PATH = '/service/token?service=harbor-registry&scope=repository:'
-    StringBuffer tokenUrl = new StringBuffer("https://mcm-dev-devops.cloudzcp.io")
+    StringBuffer tokenUrl = new StringBuffer("https://")
 
     if(config.registry) {
-        tokenUrl.append("${config.registry}/")
+        tokenUrl.append("${config.registry}")
         tokenUrl.append(LOGIN_PATH)
     }
 
@@ -45,7 +46,12 @@ private def getToken(config, logger) {
 private def getManifestPath(token, config, logger) {
     def MANIFEST_TYPE = '/v2/kshong/${config.imageName}/manifests/'
     def con_type = "application/vnd.docker.distribution.manifest.v2+json"
-    StringBuffer getManifestUrl = new StringBuffer("https://mcm-dev-devops.cloudzcp.io")
+    StringBuffer getManifestUrl = new StringBuffer("https://")
+    
+    if(config.registry) {
+        getManifestUrl.append("${config.registry}")
+    }
+    
     getManifestUrl.append(MANIFEST_TYPE)
 
     if(config.imageOldVersion) {
