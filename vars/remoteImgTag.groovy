@@ -65,7 +65,7 @@ private def getToken(config, logger) {
         url: tokenUrl.toString(),
         quiet: false,
         validResponseCodes: '100:599'
-    }catch{
+    }catch(Exception e) {
         throw createException('RC205', e)
     }
 
