@@ -2,6 +2,8 @@ import retort.utils.logging.Logger
 import retort.exception.RetortException
 import static retort.utils.Utils.delegateParameters as getParam
 
+import groovy.transform.Undefined.EXCEPTION
+
 /**
  * docker push
  *
@@ -242,16 +244,22 @@ private def getToken(remotImgMap, logger) {
         throw createException('RC205', e)
     }
 
-    def jsonMap = readJSON text: responseBody.content
-    def token = jsonMap.token
+    def jsonMap
+
+    try {
+        jsonMap = readJSON text: responseBody.content
+    }catch(Exception e) {
+        throw createException('RC206', e)
+    }
 
     if(200 != responseBody.status) {
-        if (jsonMap.errors) {
-            logger.error "failed to get token in Image Registry. [Error status code : [${responseBody.status}], message : ${jsonMap.errors.message}] "
-            throw createException('RC206')
-        }
+        logger.error "failed to get token in Image Registry. [Error status code : [${responseBody.status}], message : ${responseBody.conatent}] "
+        throw createException('RC206')
+
     }
-        
+
+    def token = jsonMap.token
+
     logger.debug "Token : ${token}"
     return token
 }
@@ -285,12 +293,16 @@ private def getManifestPath(token, remotImgMap, logger) {
         throw createException('RC207', e)
     }
 
+
     if(200 != responseBody.status) {
-        if(!responseBody.content) {
-            logger.error "Failed to get manifest in Image Registry. [Error status code : [${responseBody.status}]"
+        def jsonMap
+        try {
+            jsonMap = readJSON text: responseBody.content
+        }catch (Exception e) {
+            logger.error "Failed to get manifest in Image Registry. [Error status code : [${responseBody.status}], message : ${responseBody.content}] "
             throw createException('RC208')
         }
-        def jsonMap = readJSON text: responseBody.content
+
         if (jsonMap.errors) {
             logger.error "Failed to get manifest in Image Registry. [Error status code : [${responseBody.status}], message : ${jsonMap.errors.message}] "
             throw createException('RC208')
