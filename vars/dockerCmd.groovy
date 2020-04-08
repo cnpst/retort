@@ -286,6 +286,10 @@ private def getManifestPath(token, remotImgMap, logger) {
     }
 
     if(200 != responseBody.status) {
+        if(!responseBody.content) {
+            logger.error "Failed to get manifest in Image Registry. [Error status code : [${responseBody.status}]"
+            throw createException('RC208')
+        }
         def jsonMap = readJSON text: responseBody.content
         if (jsonMap.errors) {
             logger.error "Failed to get manifest in Image Registry. [Error status code : [${responseBody.status}], message : ${jsonMap.errors.message}] "
