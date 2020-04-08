@@ -330,8 +330,13 @@ private void pushRemoteImg(token, metaData, remotImgMap, logger) {
     }catch(Exception e) {
         throw createException('RC209', e)
     }
-    
+
     if(201 != responseBody.status) {
+        if(!responseBody.content) {
+            logger.error "failed to push the remote image to the Image Registry. [Error status code : [${responseBody.status}]] "
+            throw createException('RC210')
+        }
+
         def jsonMap = readJSON text: responseBody.content
         if (jsonMap.errors) {
             logger.error "failed to push the remote image to the Image Registry. [Error status code : [${responseBody.status}], message : ${jsonMap.errors.message}] "
