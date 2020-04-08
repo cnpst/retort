@@ -17,7 +17,7 @@ def remoteTag(ret) {
 
             def metaData = getManifestPath(token, remotImgMap, logger)
             if(metaData){
-                pushImgNew(token, metaData, remotImgMap, logger)
+                pushRemoteImg(token, metaData, remotImgMap, logger)
             }
         }
     }
@@ -165,7 +165,7 @@ private def getManifestPath(token, remotImgMap, logger) {
     return responseBody.content
 }
 
-private void pushImgNew(token, metaData, remotImgMap, logger) {
+private void pushRemoteImg(token, metaData, remotImgMap, logger) {
     logger.info "starting get manifestInfo in image registry with - [registry: ${remotImgMap.registry}, toImage : ${remotImgMap.toImage}, tagToVersion : ${remotImgMap.toVersion} ]"
     
     def MANIFEST_TYPE = "/v2/" + remotImgMap.toImage + "/manifests/"
