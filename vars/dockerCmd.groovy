@@ -229,7 +229,7 @@ private def getToken(remotImgMap, logger) {
     StringBuffer tokenUrl = new StringBuffer("https://")
 
     if(remotImgMap.registry) {
-        tokenUrl.append("${remotImgMap.registry}" + "123")
+        tokenUrl.append("${remotImgMap.registry}")
         tokenUrl.append(TOKEN_PATH)
     }
 
