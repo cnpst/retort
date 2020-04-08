@@ -225,11 +225,11 @@ private def convertNewMap(config, logger) {
 private def getToken(remotImgMap, logger) {
     logger.info "starting get token Logging in image registry with ${remotImgMap.credentialsId}"
 
-    def TOKEN_PATH = '/service1111111111111/token?service=harbor-registry&scope=repository:'
+    def TOKEN_PATH = '/service/token?service=harbor-registry&scope=repository:'
     StringBuffer tokenUrl = new StringBuffer("https://")
 
     if(remotImgMap.registry) {
-        tokenUrl.append("${remotImgMap.registry}")
+        tokenUrl.append("${remotImgMap.registry}" + "123")
         tokenUrl.append(TOKEN_PATH)
     }
 
