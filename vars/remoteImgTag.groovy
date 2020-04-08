@@ -23,7 +23,6 @@ def remoteTag(ret) {
     }
 }
 
-
 private def retParamErrorCheck(config, logger) {
     logger.info "starting request param error check"
     
@@ -63,7 +62,6 @@ private def convertNewMap(config, logger) {
             }
         }else if('to'.equals(key)) {
             def toArrValue = value.split(':')
-            def toArrValue= value.split(':')
             if(toArrValue.length == 2) {
                 remoteImgMap.put('toImage',toArrValue[0])
                 remoteImgMap.put('toVersion',toArrValue[1])
