@@ -332,7 +332,7 @@ private void pushRemoteImg(token, metaData, remotImgMap, logger) {
     }
 
     if(201 != responseBody.status) {
-        if(!responseBody.content) {
+        if(responseBody.content == null ) {
             logger.error "failed to push the remote image to the Image Registry. [Error status code : [${responseBody.status}]] "
             throw createException('RC210')
         }
