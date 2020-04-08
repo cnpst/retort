@@ -364,7 +364,7 @@ private void pushRemoteImg(token, metaData, remotImgMap, logger) {
         }
     }
     
-    logger.debug "Successfully pushed the remote image to the image registry : ${responseBody.content}"
+    logger.debug "Successfully pushed the remote image to the image registry"
 }
 
 @NonCPS
