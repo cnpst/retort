@@ -2,8 +2,6 @@ import retort.utils.logging.Logger
 import retort.exception.RetortException
 import static retort.utils.Utils.delegateParameters as getParam
 
-import groovy.transform.Undefined.EXCEPTION
-
 /**
  * docker push
  *
