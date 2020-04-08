@@ -169,12 +169,12 @@ private def retParamErrorCheck(config, logger) {
     }
         
     if(!config.from) {
-        logger.error("from: projectName/ImageName:tag values is required.")
+        logger.error("from: projectName/ImageName:tag values or from: tag value is required.")
         throw new RetortException('RC211')
     }
 
     if(!config.to) {
-         logger.error("to: projectName/ImageName:tag values is required.")
+         logger.error("to: projectName/ImageName:tag values or to: tag value is required.")
         throw new RetortException('RC212')
     }
 
@@ -193,8 +193,10 @@ private def convertNewMap(config, logger) {
             if(fromArrValue.length == 2) {
                 remoteImgMap.put('fromImage',fromArrValue[0])
                 remoteImgMap.put('fromVersion',fromArrValue[1])
+            }else if(fromArrValue.length == 1) {
+                remoteImgMap.put('fromVersion',fromArrValue[0])
             }else {
-                logger.error 'Please set from: projectname/imagename:tagversion ex) from: myproject/myimage:dev-1'
+                logger.error 'Please set from: projectname/imagename:tagversion or from: tagversion ex) from: myproject/myimage:dev-1 or from: dev-1'
                 throw new RetortException('RC211')
             }
         }else if('to'.equals(key)) {
@@ -202,11 +204,17 @@ private def convertNewMap(config, logger) {
             if(toArrValue.length == 2) {
                 remoteImgMap.put('toImage',toArrValue[0])
                 remoteImgMap.put('toVersion',toArrValue[1])
+            }else if(toArrValue.length == 1) {
+                remoteImgMap.put('toVersion',toArrValue[0])
             }else {
-                logger.error 'Please set to: projectname/imagename:tagversion ex) to: myproject/myimage:prd-1'
+                logger.error 'Please set to: projectname/imagename:tagversion or to: tagversion ex) to: myproject/myimage:prd-1 or to: prd-1'
                 throw new RetortException('RC212')
             }
-        }else {
+        }else if('imageName'.equals(key)) {
+            remoteImgMap.put('fromImage',value)
+            remoteImgMap.put('toImage',value)
+        }
+        else {
             remoteImgMap.put(key,value)
         }
     }
