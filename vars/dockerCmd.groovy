@@ -102,11 +102,11 @@ private def pushWithCredentialsId(config, command, logger) {
   withCredentials([usernamePassword(credentialsId: config.credentialsId, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USER')]) {
     if (config.registry) {
       logger.debug("Registry : ${config.registry}")
-      loginCommand = "docker login ${config.registry} -u \"${DOCKER_USER}\" -p \"${DOCKER_PASSWORD}\""
+      loginCommand = "docker login ${config.registry} -u \'" + DOCKER_USER + "\' -p \'" + DOCKER_PASSWORD + "\'"
       logoutCommand = "docker logout ${config.registry}"
     } else {
       logger.debug("Registry : docker.io")
-      loginCommand = "docker login -u \"${DOCKER_USER}\" -p \"${DOCKER_PASSWORD}\""
+      loginCommand = "docker login -u  \'" + DOCKER_USER + "\' -p \'" + DOCKER_PASSWORD + "\'"
       logoutCommand = "docker logout"
     }
 
@@ -124,11 +124,11 @@ private def pushWithUsernameAndPassword(config, command, logger) {
   logger.debug("Login with username/password")
   if (config.registry) {
     logger.debug("Registry : ${config.registry}")
-    loginCommand = "docker login ${config.registry} -u ${config.username} -p ${config.password}"
+    loginCommand = "docker login ${config.registry} -u \'" + config.username + "\' -p \'" + config.password + "\'"
     logoutCommand = "docker logout ${config.registry}"
   } else {
     logger.debug("Registry : docker.io")
-    loginCommand = "docker login -u ${config.username} -p ${config.password}"
+    loginCommand = "docker login -u  \'" + config.username+ "\' -p \'" + config.password + "\'"
     logoutCommand = "docker logout"
   }
   
