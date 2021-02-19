@@ -12,7 +12,8 @@ def call(String... paths) {
   - scm                               :: ${scm}
   - currentBuild                      :: ${currentBuild}
   - currentBuild.rawBuild             :: ${currentBuild.rawBuild}
-  - currentBuild.rawBuild.getParent() :: ${currentBuild.rawBuild.getParent()}""".stripMargin())
+  - currentBuild.rawBuild.getParent() :: ${currentBuild.rawBuild.getParent()}
+  - SCMFileSystem.supports()          :: ${SCMFileSystem.supports(scm)}""".stripMargin())
   log.info("Loaded FileSystem                   :: $fs")
   if (fs == null) {
   	throw new FileSystemNotFoundException("Can not create SCMFileSystem with ${scm}")
