@@ -7,9 +7,15 @@ def call(String... paths) {
   Logger log = Logger.getLogger(this)
 
   SCMFileSystem fs = SCMFileSystem.of(currentBuild.rawBuild.getParent(), scm)
-  log.debug('Loaded FileSystem :: $fs')
+  log.debug("""
+  Environment variables for load SCMFileSystem
+  - scm                               :: ${scm}
+  - currentBuild                      :: ${currentBuild}
+  - currentBuild.rawBuild             :: ${currentBuild.rawBuild}
+  - currentBuild.rawBuild.getParent() :: ${currentBuild.rawBuild.getParent()}""".stripMargin())
+  log.info("Loaded FileSystem                   :: $fs")
   if (fs == null) {
-  	throw new FileSystemNotFoundException('Can not create SCMFileSystem with ${scm}')
+  	throw new FileSystemNotFoundException("Can not create SCMFileSystem with ${scm}")
   }
 
   for(path in paths){
